@@ -11,13 +11,14 @@ void main() {
 void CheckEx1(){
     IO.println("Выберите язык словаря [A: Язык 1, b: язык 2]");
 
-    var lang = Character.toLowerCase(IO.readln().charAt(0)) == 'b' ? SECOND_LANG : FIRST_LANG;
+    var input = IO.readln();
+    var lang = input.isEmpty() || Character.toLowerCase(input.charAt(0)) != 'b' ? FIRST_LANG : SECOND_LANG;
     var dict = new TEx1_Dictionary(lang);
 
-    dict.AddValue("12345", "First pair!");
-    dict.AddValue("54321", "Second pair!");
-    dict.AddValue("abcd", "Third pair!");
-    dict.AddValue("QTYW", "Fourth pair!");
+    dict.AddValue("12345", "First");
+    dict.AddValue("54321", "Second");
+    dict.AddValue("abcd", "Third");
+    dict.AddValue("QTYW", "Fourth");
 
     dict.PrintPairs();
     dict.DeletePairByKey("54321");

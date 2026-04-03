@@ -16,8 +16,12 @@ public class TEx1_Dictionary {
     public void ParseFile(String filename){
         // TODO
     }
+    public void WriteToFile(String filename) {
+
+    }
 
     public void PrintPairs() {
+        IO.println("Printing dict contents: ");
         for (int i=0; i< keys.size(); i++) {
             IO.println(String.format("%s: %s", keys.get(i), values.get(i)));
         }
@@ -33,27 +37,45 @@ public class TEx1_Dictionary {
     }
 
     public void FindValue(String key) {
+        IO.print("Looking for value by key " + key + "... ");
         int id = FindValueID(key);
-        IO.println(id == -1 ? "No value found!" : values.get(id));
+        IO.println(id == -1 ? "No value found!" : "Found value: " + values.get(id));
     }
 
     public void DeletePairByKey(String key) {
+        IO.print("Deleting pair by key " + key + "... ");
         int id = FindValueID(key);
         if (id == -1) {
             IO.println("No key found!");
             return;
         }
 
+        IO.println(String.format("Deleted pair (%s: %s)", keys.get(id), values.get(id)));
         keys.remove(id);
         values.remove(id);
     }
 
+    private String GetLanguage() {
+        if (type == DictTypes.FIRST_LANG) {
+            return "Язык 1";
+        }
+        else if (type == DictTypes.SECOND_LANG) {
+            return "Язык 2";
+        }
+        else if (type == DictTypes.UNRESTRICTED) {
+            return "Язык без ограничений";
+        }
+        return "Error: unknown language!";
+    }
+
     // It must follow the protection rules for a DictType
     public void AddValue(String key, String value) {
+        IO.print(String.format("Adding pair (%s, %s)... ", key, value));
         if (!LangCheck(key)) {
-            IO.println("Error: the key is invalid!");
+            IO.println("Error: the key is invalid for this dictionary (language: " + GetLanguage() + ")");
             return;
         }
+        IO.println("Pair added successfully!");
 
         keys.add(key);
         values.add(value);
