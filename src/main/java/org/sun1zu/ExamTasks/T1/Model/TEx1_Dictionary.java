@@ -1,4 +1,4 @@
-package org.sun1zu.ExamTasks;
+package org.sun1zu.ExamTasks.T1.Model;
 
 import java.io.FileReader;
 import java.io.FileWriter;

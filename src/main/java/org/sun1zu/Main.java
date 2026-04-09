@@ -1,11 +1,11 @@
 package org.sun1zu;
 
+import org.sun1zu.ExamTasks.T1.Model.TEx1_Dictionary;
 import org.sun1zu.Lab4.*;
-import org.sun1zu.ExamTasks.*;
 
 import java.io.IOException;
 
-import static org.sun1zu.ExamTasks.DictTypes.*;
+import static org.sun1zu.ExamTasks.T1.Model.DictTypes.*;
 
 public class Main {
     public static void main(String[] args) {
