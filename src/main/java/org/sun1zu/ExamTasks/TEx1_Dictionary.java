@@ -26,6 +26,7 @@ public class TEx1_Dictionary {
     }
     public void WriteToFile(String filename) throws IOException {
         var fw = new FileWriter(filename);
+        jsonObject.put("DictLang", type);
         for (int i=0; i<keys.size(); i++) {
             jsonObject.put(keys.get(i), values.get(i));
         }
