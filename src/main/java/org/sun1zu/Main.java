@@ -17,7 +17,13 @@ public class Main {
         IO.println("Выберите язык словаря [A: Язык 1, b: язык 2]");
 
         var input = IO.readln();
-        var lang = input.isEmpty() || Character.toLowerCase(input.charAt(0)) != 'b' ? FIRST_LANG : SECOND_LANG;
+
+        var lang = FIRST_LANG;
+        if(!input.isEmpty()) {
+            if(input.charAt(0) == 'b')
+                lang = SECOND_LANG;
+        }
+
         var dict = new TEx1_Dictionary(lang);
 
         dict.AddValue("12345", "First");

@@ -13,6 +13,8 @@ public class TEx1_Dictionary {
     private JSONObject jsonObject;
 
     public TEx1_Dictionary (DictTypes dictionaryType) {
+        type = dictionaryType;
+
         keys = new LinkedList<>();
         values = new LinkedList<>();
 
