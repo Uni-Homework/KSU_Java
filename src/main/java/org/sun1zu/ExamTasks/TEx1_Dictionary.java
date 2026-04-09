@@ -1,5 +1,7 @@
 package org.sun1zu.ExamTasks;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import org.json.simple.JSONObject;
@@ -15,15 +17,21 @@ public class TEx1_Dictionary {
         values = new LinkedList<>();
 
         jsonObject = new JSONObject();
+
+        IO.println("Created new dict of language " + GetLanguage());
     }
 
     public void ParseFile(String filename){
         // TODO
     }
-    public void WriteToFile(String filename) {
+    public void WriteToFile(String filename) throws IOException {
+        var fw = new FileWriter(filename);
         for (int i=0; i<keys.size(); i++) {
-            // WIP
+            jsonObject.put(keys.get(i), values.get(i));
         }
+        fw.write(jsonObject.toJSONString());
+        fw.close();
+        jsonObject.clear();
     }
 
     public void PrintPairs() {

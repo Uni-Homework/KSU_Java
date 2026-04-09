@@ -35,3 +35,4 @@ target/
 *.iml
 .settings/
 application.properties
+*.dict*

@@ -3,6 +3,8 @@ package org.sun1zu;
 import org.sun1zu.Lab4.*;
 import org.sun1zu.ExamTasks.*;
 
+import java.io.IOException;
+
 import static org.sun1zu.ExamTasks.DictTypes.*;
 
 public class Main {
@@ -30,6 +32,12 @@ public class Main {
         dict.FindValue("QTYW");
         dict.FindValue("abcd");
         dict.FindValue("54321");
+
+        try {
+            dict.WriteToFile("test.dict.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void CheckLab4() {
