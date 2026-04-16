@@ -46,23 +46,22 @@ public class View {
                     break;
                 case 2:
                     var inp = FileSelect();
-                    if(inp.equals("D3ADB33F")) break;
+                    if (inp.equals("D3ADB33F")) break;
                     try {
                         var dict = Dictionary.ParseFile(inp);
                         DictMenu(dict, inp);
-                    } catch (IOException e){
+                    } catch (IOException e) {
                         IO.println("File not found or is corrupted!");
                     }
                     break;
 
                 case 3:
                     var fname = FileSelect();
-                    if(fname.equals("D3ADB33F")) break;
+                    if (fname.equals("D3ADB33F")) break;
                     var file = new File(fname);
-                    if(file.delete()) {
+                    if (file.delete()) {
                         IO.println("Dictionary deleted successfully!");
-                    }
-                    else {
+                    } else {
                         IO.println("Error: file does not exist");
                     }
                     break;
@@ -79,11 +78,12 @@ public class View {
 
     /**
      * Menu for user to modify a dictionary
-     * @param dict dictionary to modify
+     *
+     * @param dict     dictionary to modify
      * @param filename leave empty not to overwrite file
      */
     static void DictMenu(Dictionary dict, String filename) {
-        while(true) {
+        while (true) {
             var input = MenuWaitUserInput(menu2, 0, 4);
             switch (input) {
                 case 0:
@@ -122,20 +122,21 @@ public class View {
 
     /**
      * Looks for all dict files in program working dir and lets the user select one of them
+     *
      * @return User selected filename OR "D3ADB33F" if selection is "Back"
      */
     private static String FileSelect() {
         var fnames = Dictionary.GetDictFiles();
 
         String menu = "";
-        int c=1;
-        for(var el: fnames) {
+        int c = 1;
+        for (var el : fnames) {
             menu = menu.concat(String.format("%d. %s\n", c++, el));
         }
         menu = menu.concat("0. Back");
 
         int sel = MenuWaitUserInput(menu, 0, fnames.size());
         if (sel == 0) return "D3ADB33F";
-        return fnames.get(sel-1);
+        return fnames.get(sel - 1);
     }
 }

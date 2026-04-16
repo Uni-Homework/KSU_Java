@@ -6,7 +6,7 @@ public class T1_Lightning {
     int v_sound = 1100;
     float interval = 7.2f;
 
-    public void Solve(){
-        System.out.println(v_sound*interval);
+    public void Solve() {
+        System.out.println(v_sound * interval);
     }
 }

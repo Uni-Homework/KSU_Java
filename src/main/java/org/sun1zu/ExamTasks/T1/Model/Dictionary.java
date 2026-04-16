@@ -1,5 +1,8 @@
 package org.sun1zu.ExamTasks.T1.Model;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,15 +10,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 public class Dictionary {
     public static final String file_ext = ".dict.txt";
 
-    private List<String> keys;
-    private List<String> values;
-    private DictTypes type;
+    private final List<String> keys;
+    private final List<String> values;
+    private final DictTypes type;
 
     public Dictionary(DictTypes dictionaryType) {
         type = dictionaryType;
@@ -28,32 +29,33 @@ public class Dictionary {
 
     /**
      * Use this method to init a dictionary (no language given)
+     *
      * @return An empty dictionary with a language set by user
      */
     public static Dictionary InitDictionary() throws IndexOutOfBoundsException {
         IO.println("Select dictionary language: ");
 
-        for (int i=0; i<DictTypes.values().length; i++){
-            IO.println(String.format("%d. %s", i+1, DictTypes.values()[i]));
+        for (int i = 0; i < DictTypes.values().length; i++) {
+            IO.println(String.format("%d. %s", i + 1, DictTypes.values()[i]));
         }
 
         String sel;
         int isel = -1;
-        while(true){
+        while (true) {
             sel = IO.readln();
             isel = Integer.parseInt(sel);
 
-            if(isel < 0 && isel > DictTypes.values().length) {
+            if (isel < 0 && isel > DictTypes.values().length) {
                 IO.println("Selection invalid");
-            }
-            else break;
+            } else break;
         }
 
-        return new Dictionary(DictTypes.values()[isel-1]);
+        return new Dictionary(DictTypes.values()[isel - 1]);
     }
 
     /**
      * Creates a new dict based on JSON file contents.
+     *
      * @param filename Name of the file to read data from
      * @throws IOException File is corrupted
      */
@@ -67,7 +69,7 @@ public class Dictionary {
         JSONObject jsonObject = (JSONObject) obj;
 
         // Extract language
-        var type = (DictTypes) DictTypes.valueOf((String) jsonObject.get("DictLang"));
+        var type = DictTypes.valueOf((String) jsonObject.get("DictLang"));
         var dict = new Dictionary(type);
         jsonObject.remove("DictLang");
 
@@ -88,9 +90,7 @@ public class Dictionary {
     public static List<String> GetDictFiles() {
         var res = new LinkedList<String>();
         try {
-            var files = Files.list(Paths.get("."))
-                    .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(file_ext));
+            var files = Files.list(Paths.get(".")).filter(Files::isRegularFile).filter(p -> p.toString().endsWith(file_ext));
             var paths = files.toList();
 
             for (var path : paths)
@@ -115,7 +115,7 @@ public class Dictionary {
 
         jsonObject.put("DictLang", type.name());
 
-        for (int i=0; i<keys.size(); i++) {
+        for (int i = 0; i < keys.size(); i++) {
             jsonObject.put(keys.get(i), values.get(i));
         }
         fw.write(jsonObject.toJSONString());
@@ -125,7 +125,7 @@ public class Dictionary {
 
     public void PrintPairs() {
         IO.println("Printing dict contents: ");
-        for (int i=0; i< keys.size(); i++) {
+        for (int i = 0; i < keys.size(); i++) {
             IO.println(String.format("%s: %s", keys.get(i), values.get(i)));
         }
     }
@@ -162,8 +162,7 @@ public class Dictionary {
             keys.add(key);
             values.add(value);
             if (detailed) IO.println("Pair added successfully!");
-        }
-        else {
+        } else {
             values.set(found, value);
             if (detailed) IO.println("Pair overwritten successfully!");
         }
@@ -178,7 +177,7 @@ public class Dictionary {
     }
 
     private int FindValueID(String key) {
-        for (int i=0; i<keys.size(); i++) {
+        for (int i = 0; i < keys.size(); i++) {
             if (key.equals(keys.get(i))) {
                 return i;
             }
@@ -187,17 +186,16 @@ public class Dictionary {
     }
 
     private boolean LangCheck(String s) {
-        if(type == DictTypes.FIRST_LANG) {
+        if (type == DictTypes.FIRST_LANG) {
             String eng_alp = "qwertyuiopasdfghjklzxcvbnm";
 
-            for (int i=0; i<s.length(); i++) {
+            for (int i = 0; i < s.length(); i++) {
                 if (eng_alp.indexOf(Character.toLowerCase(s.charAt(i))) == -1) return false;
             }
 
             return s.length() == 4;
-        }
-        else if (type == DictTypes.SECOND_LANG) {
-            for(int i=0; i<s.length(); i++) {
+        } else if (type == DictTypes.SECOND_LANG) {
+            for (int i = 0; i < s.length(); i++) {
                 if (!Character.isDigit(s.charAt(i))) {
                     return false;
                 }

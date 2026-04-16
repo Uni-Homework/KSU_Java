@@ -4,6 +4,7 @@ public class Main {
     static void main(String[] args) {
         CheckLab4();
     }
+
     static void CheckLab4() {
         IO.println("Solving Lightning");
         new T1_Lightning().Solve();
