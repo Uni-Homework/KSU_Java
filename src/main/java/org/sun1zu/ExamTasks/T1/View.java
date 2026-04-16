@@ -1,4 +1,3 @@
-// TODO: add abortion on nonexistent selection (instead of 0)
 package org.sun1zu.ExamTasks.T1;
 
 import org.sun1zu.ExamTasks.T1.Model.Dictionary;
@@ -22,11 +21,20 @@ public class View {
                     break;
                 case 1:
                     Dictionary dictionary = Dictionary.InitDictionary();
+                    if (dictionary == null) break;
                     DictMenu(dictionary, "");
                     break;
                 case 2:
-                    var inp = FileSelect();
-                    if (inp.equals("D3ADB33F")) break;
+                    var files = Dictionary.GetDictFiles();
+
+                    if (files.isEmpty()) {
+                        IO.println("No dictionaries found in working dir!");
+                        break;
+                    }
+
+                    var inp = (String) MenuWaitUserInput(files);
+                    if (inp == null) break;
+
                     try {
                         var dict = Dictionary.ParseFile(inp);
                         DictMenu(dict, inp);
@@ -36,8 +44,16 @@ public class View {
                     break;
 
                 case 3:
-                    var fname = FileSelect();
-                    if (fname.equals("D3ADB33F")) break;
+                    var files_del = Dictionary.GetDictFiles();
+
+                    if (files_del.isEmpty()) {
+                        IO.println("No dictionaries found in working dir!");
+                        break;
+                    }
+
+                    var fname = (String) MenuWaitUserInput(Dictionary.GetDictFiles());
+                    if (fname == null) break;
+
                     var file = new File(fname);
                     if (file.delete()) {
                         IO.println("Dictionary deleted successfully!");
@@ -98,25 +114,5 @@ public class View {
             }
             IO.println();
         }
-    }
-
-    /**
-     * Looks for all dict files in program working dir and lets the user select one of them
-     *
-     * @return User selected filename OR "D3ADB33F" if selection is "Back"
-     */
-    private static String FileSelect() {
-        var fnames = Dictionary.GetDictFiles();
-
-        String menu = "";
-        int c = 1;
-        for (var el : fnames) {
-            menu = menu.concat(String.format("%d. %s\n", c++, el));
-        }
-        menu = menu.concat("0. Back");
-
-        int sel = MenuWaitUserInput(menu, 0, fnames.size());
-        if (sel == 0) return "D3ADB33F";
-        return fnames.get(sel - 1);
     }
 }

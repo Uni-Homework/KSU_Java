@@ -11,6 +11,9 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.sun1zu.ExamTasks.T1.Model.Tools.MenuWaitUserInput;
+
+// TODO: add documentation
 public class Dictionary {
     public static final String file_ext = ".dict.txt";
 
@@ -23,34 +26,22 @@ public class Dictionary {
 
         keys = new LinkedList<>();
         values = new LinkedList<>();
-
-//        IO.println("Created new dict of language " + GetLanguage());
     }
 
     /**
      * Use this method to init a dictionary (no language given)
      *
-     * @return An empty dictionary with a language set by user
+     * @return An empty dictionary with a language set by user OR null if operation was aborted
      */
     public static Dictionary InitDictionary() throws IndexOutOfBoundsException {
         IO.println("Select dictionary language: ");
 
-        for (int i = 0; i < DictTypes.values().length; i++) {
-            IO.println(String.format("%d. %s", i + 1, DictTypes.values()[i].getName()));
+        var res = (DictTypes) MenuWaitUserInput(List.of(DictTypes.values()));
+
+        if (res == null) {
+            return null;
         }
-
-        String sel;
-        int isel = -1;
-        while (true) {
-            sel = IO.readln();
-            isel = Integer.parseInt(sel);
-
-            if (isel < 0 && isel > DictTypes.values().length) {
-                IO.println("Selection invalid");
-            } else break;
-        }
-
-        return new Dictionary(DictTypes.values()[isel - 1]);
+        return new Dictionary(res);
     }
 
     /**
@@ -60,8 +51,6 @@ public class Dictionary {
      * @throws IOException File is corrupted
      */
     public static Dictionary ParseFile(String filename) throws IOException {
-        // IO.println("Parsing file " + filename);
-
         var fr = new FileReader(filename);
         String data = fr.readAllAsString();
 
@@ -171,6 +160,7 @@ public class Dictionary {
         }
     }
 
+
     public void AddValue(String key, String value) {
         AddValue(key, value, true);
     }
@@ -184,6 +174,7 @@ public class Dictionary {
         return -1;
     }
 
+    // TODO: may move to DictTypes
     private boolean LangCheck(String s) {
         if (type == DictTypes.FIRST_LANG) {
             String eng_alp = "qwertyuiopasdfghjklzxcvbnm";

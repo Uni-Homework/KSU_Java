@@ -39,20 +39,19 @@ public class Tools {
      * @param objects List of objects to select from
      * @return Selected object OR null if selected "Back"
      */
-    public static Object MenuWaitUserInput(List<Object> objects) {
+    public static Object MenuWaitUserInput(List<?> objects) {
         int min = 0;
         int max = objects.size();
 
         String menu = "";
         int c = 1;
         for (var ob : objects) {
-            menu = menu.concat(c++ + ob.toString());
+            menu = menu.concat(String.format("%d. %s\n", c++, ob.toString()));
         }
         menu = menu.concat("0. Back");
 
-        int ans = MenuWaitUserInput(menu, min, max) - 1;
+        int ans = MenuWaitUserInput(menu, min, max);
         if (ans == min) return null;   // null indicates "back" selection
         return objects.get(ans - 1);
     }
-
 }
