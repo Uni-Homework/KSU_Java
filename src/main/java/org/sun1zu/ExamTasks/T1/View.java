@@ -6,29 +6,9 @@ import org.sun1zu.ExamTasks.T1.Model.Dictionary;
 import java.io.File;
 import java.io.IOException;
 
+import static org.sun1zu.ExamTasks.T1.Model.Tools.MenuWaitUserInput;
+
 public class View {
-    private static int MenuWaitUserInput(String menu, int min, int max) {
-        while (true) {
-            IO.println(menu);
-            var selection = IO.readln();
-
-            if (!selection.isEmpty()) {
-                int menuSelection;
-                try {
-                    menuSelection = Integer.parseInt(String.valueOf(selection.charAt(0)));
-                } catch (NumberFormatException ex) {
-                    IO.println("Invalid input!");
-                    continue;
-                }
-                if (menuSelection < min || menuSelection > max) {
-                    IO.println("Please select a valid menu item!");
-                    continue;
-                }
-                return menuSelection;
-            }
-        }
-    }
-
     static String menu1 = "1. Create dict\n2. Edit dict\n3. Remove dict\n0. Exit";
 
     static void main() {

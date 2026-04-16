@@ -36,7 +36,7 @@ public class Dictionary {
         IO.println("Select dictionary language: ");
 
         for (int i = 0; i < DictTypes.values().length; i++) {
-            IO.println(String.format("%d. %s", i + 1, DictTypes.values()[i]));
+            IO.println(String.format("%d. %s", i + 1, DictTypes.values()[i].getName()));
         }
 
         String sel;
@@ -79,7 +79,7 @@ public class Dictionary {
             dict.AddValue(key, (String) jsonObject.get(key), false);
         }
         IO.println("Done! Found " + dict.keys.size() + " elements");
-        IO.println("Language of the file: " + dict.GetLanguage());
+        IO.println("Language of the file: " + dict.type.getName());
 
         jsonObject.clear();
         fr.close();
@@ -153,7 +153,10 @@ public class Dictionary {
     public void AddValue(String key, String value, boolean detailed) {
         if (detailed) IO.print(String.format("Adding pair (%s, %s)... ", key, value));
         if (!LangCheck(key)) {
-            if (detailed) IO.println("Error: the key is invalid for this dictionary (language: " + GetLanguage() + ")");
+            if (detailed) {
+                IO.println("Error: the key is invalid for this dictionary (language: " + type.getName() + ")");
+                IO.println("Hint: " + type.getHint());
+            }
             return;
         }
 
@@ -170,10 +173,6 @@ public class Dictionary {
 
     public void AddValue(String key, String value) {
         AddValue(key, value, true);
-    }
-
-    private String GetLanguage() {
-        return type.toString();
     }
 
     private int FindValueID(String key) {
