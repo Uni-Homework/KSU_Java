@@ -1,0 +1,499 @@
+openapi: 3.1.0
+info:
+  title: Kerosene API
+  description: Backend API for Kerosene vacancy matcher
+  version: '0.2'
+paths:
+  /candidates/:
+    get:
+      tags:
+        - candidates
+      summary: List Candidates
+      operationId: list_candidates_candidates__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+        - candidates
+      summary: Create Candidate
+      operationId: create_candidate_candidates__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: Candidate Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  '/candidates/{candidate_id}':
+    get:
+      tags:
+        - candidates
+      summary: Get Candidate
+      operationId: get_candidate_candidates__candidate_id__get
+      parameters:
+        - name: candidate_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Candidate Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - candidates
+      summary: Update Candidate
+      operationId: update_candidate_candidates__candidate_id__put
+      parameters:
+        - name: candidate_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Candidate Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: Candidate Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /vacancies/:
+    get:
+      tags:
+        - vacancies
+      summary: List Vacancies
+      operationId: list_vacancies_vacancies__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  '/vacancies/{vacancy_id}':
+    get:
+      tags:
+        - vacancies
+      summary: Get Vacancy
+      operationId: get_vacancy_vacancies__vacancy_id__get
+      parameters:
+        - name: vacancy_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Vacancy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  '/vacancies/{vacancy_id}/compatibility/{candidate_id}':
+    get:
+      tags:
+        - vacancies
+      summary: Get Compatibility
+      operationId: >-
+        get_compatibility_vacancies__vacancy_id__compatibility__candidate_id__get
+      parameters:
+        - name: vacancy_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Vacancy Id
+        - name: candidate_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Candidate Id
+        - name: use_ai
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Enable AI-based fit score (off by default)
+            default: false
+            title: Use Ai
+          description: Enable AI-based fit score (off by default)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /ai/txt-to-candidate:
+    post:
+      tags:
+        - ai
+      summary: Convert Txt To Candidate
+      operationId: convert_txt_to_candidate_ai_txt_to_candidate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TxtToCandidateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /ai/description-match:
+    post:
+      tags:
+        - ai
+      summary: Get Match
+      operationId: get_match_ai_description_match_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescriptionMatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /ai/recommendations:
+    post:
+      tags:
+        - ai
+      summary: Get Candidate Recommendations
+      operationId: get_candidate_recommendations_ai_recommendations_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecommendationsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /ai/analyze-candidate-fit:
+    post:
+      tags:
+        - ai
+      summary: Analyze Fit
+      operationId: analyze_fit_ai_analyze_candidate_fit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateFitAnalysisRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /skills/:
+    get:
+      tags:
+        - skills
+      summary: List Skills
+      operationId: list_skills_skills__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  '/internal/hr/best-candidates/{vacancy_id}':
+    get:
+      tags:
+        - hr-internal
+      summary: Best Candidates For Vacancy
+      description: Rank all candidates for a given vacancy by compatibility score.
+      operationId: best_candidates_for_vacancy_internal_hr_best_candidates__vacancy_id__get
+      parameters:
+        - name: vacancy_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Vacancy Id
+        - name: top_n
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+            title: Top N
+        - name: include_resume
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+            title: Include Resume
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /internal/hr/conversion-report:
+    get:
+      tags:
+        - hr-internal
+      summary: Conversion Report
+      description: Conversion report by vacancy based on candidates actions_history.
+      operationId: conversion_report_internal_hr_conversion_report_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /internal/hr/conversion-report.xlsx:
+    get:
+      tags:
+        - hr-internal
+      summary: Conversion Report Xlsx
+      description: XLSX conversion report (Excel-friendly).
+      operationId: conversion_report_xlsx_internal_hr_conversion_report_xlsx_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  '/internal/hr/best-candidates/{vacancy_id}/report.pdf':
+    get:
+      tags:
+        - hr-internal
+      summary: Best Candidates Report Pdf
+      description: 'PDF report for management: top-N candidates with resume excerpts.'
+      operationId: >-
+        best_candidates_report_pdf_internal_hr_best_candidates__vacancy_id__report_pdf_get
+      parameters:
+        - name: vacancy_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Vacancy Id
+        - name: top_n
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+            title: Top N
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /internal/hr/vacancies-summary:
+    get:
+      tags:
+        - hr-internal
+      summary: Vacancies Summary
+      description: Overview of all vacancies with top/avg candidate match scores.
+      operationId: vacancies_summary_internal_hr_vacancies_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /health:
+    get:
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    CandidateFitAnalysisRequest:
+      properties:
+        candidate_text:
+          type: string
+          title: Candidate Text
+        project_links:
+          items:
+            type: string
+          type: array
+          title: Project Links
+          default: []
+        vacancy_id:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Vacancy Id
+        vacancy_text:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Vacancy Text
+      type: object
+      required:
+        - candidate_text
+      title: CandidateFitAnalysisRequest
+    DescriptionMatchRequest:
+      properties:
+        vacancy_description:
+          type: string
+          title: Vacancy Description
+        candidate_resume:
+          type: string
+          title: Candidate Resume
+      type: object
+      required:
+        - vacancy_description
+        - candidate_resume
+      title: DescriptionMatchRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RecommendationsRequest:
+      properties:
+        vacancy:
+          type: object
+          title: Vacancy
+        candidate:
+          type: object
+          title: Candidate
+      type: object
+      required:
+        - vacancy
+        - candidate
+      title: RecommendationsRequest
+    TxtToCandidateRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+        - text
+      title: TxtToCandidateRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
