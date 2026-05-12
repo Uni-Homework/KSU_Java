@@ -1,0 +1,58 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: integer
+        category:
+          type: string
+        imageUrl:
+          type: string
+
+    Basket:
+      type: object
+      properties:
+        basketId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: integer
+              productName:
+                type: string
+              price:
+                type: integer
+              quantity:
+                type: integer
+        totalItems:
+          type: integer
+        totalPrice:
+          type: integer
+
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: integer
+        totalPrice:
+          type: integer
+        status:
+          type: string
+          enum:
+            - CREATED
+            - PAID
+            - SHIPPED
+            - DELIVERED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time

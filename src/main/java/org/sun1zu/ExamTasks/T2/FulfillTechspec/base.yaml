@@ -1,0 +1,26 @@
+openapi: 3.0.4
+info:
+  title: GoodsShop — Интернет-магазин
+  description: |
+    REST API интернет-магазина
+    
+    Контроллеры:
+    - ProductController (3 метода)
+    - BasketController (3 метода)
+    - OrderController (3 метода)
+  version: 1.0.0
+  contact:
+    name: Студент
+    email: student@university.ru
+
+servers:
+  - url: https://api.goodsshop.ru/v1
+    description: Тестовый сервер
+
+tags:
+  - name: ProductController
+    description: Каталог товаров
+  - name: BasketController
+    description: Корзина покупателя
+  - name: OrderController
+    description: Управление заказами
