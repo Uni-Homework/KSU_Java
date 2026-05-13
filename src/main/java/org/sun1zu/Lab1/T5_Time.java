@@ -1,4 +1,4 @@
-package org.sun1zu.Lab4;
+package org.sun1zu.Lab1;
 
 public class T5_Time {
     public void Solve(int days) {

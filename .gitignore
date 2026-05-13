@@ -36,3 +36,5 @@ target/
 .settings/
 application.properties
 *.dict*
+
+*.txt
