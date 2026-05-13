@@ -1,4 +1,4 @@
-openapi: 3.0.4
+openapi: 3.1.0
 info:
   title: GoodsShop — Интернет-магазин
   description: |
@@ -8,10 +8,14 @@ info:
     - ProductController (3 метода)
     - BasketController (3 метода)
     - OrderController (3 метода)
+    
+    Особенности:
+    - Корзина привязана к пользователю
+    - Заказ содержит полный список товаров
   version: 1.0.0
   contact:
-    name: Студент
-    email: student@university.ru
+    name: Владелец магазина
+    email: myemail@yandex.ru
 
 servers:
   - url: https://api.goodsshop.ru/v1
@@ -21,6 +25,431 @@ tags:
   - name: ProductController
     description: Каталог товаров
   - name: BasketController
-    description: Корзина покупателя
+    description: Корзина покупателя (привязана к пользователю)
   - name: OrderController
-    description: Управление заказами
+    description: Управление заказами (со списком товаров)
+
+paths:
+  # ==================== ProductController ====================
+  /products:
+    get:
+      tags:
+        - ProductController
+      summary: 1. Получить список товаров
+      operationId: getProducts
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  total:
+                    type: integer
+
+  /products/{id}:
+    get:
+      tags:
+        - ProductController
+      summary: 2. Получить товар по ID
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Товар не найден
+
+  /products/search:
+    get:
+      tags:
+        - ProductController
+      summary: 3. Поиск товаров
+      operationId: searchProducts
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+  # ==================== BasketController ====================
+  /basket/{userId}:
+    get:
+      tags:
+        - BasketController
+      summary: 1. Получить корзину пользователя
+      operationId: getBasketByUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID пользователя
+      responses:
+        '200':
+          description: Корзина пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+        '404':
+          description: Корзина не найдена
+
+  /basket/{userId}/items:
+    post:
+      tags:
+        - BasketController
+      summary: 2. Добавить товар в корзину пользователя
+      operationId: addToBasket
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: integer
+                quantity:
+                  type: integer
+                  minimum: 1
+                  default: 1
+      responses:
+        '200':
+          description: Товар добавлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+        '404':
+          description: Пользователь или товар не найдены
+        '400':
+          description: Недостаточно товара на складе
+
+    delete:
+      tags:
+        - BasketController
+      summary: 3. Удалить товар из корзины
+      operationId: removeFromBasket
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Товар удален из корзины
+        '404':
+          description: Корзина или товар не найдены
+
+  # ==================== OrderController ====================
+  /orders:
+    post:
+      tags:
+        - OrderController
+      summary: 1. Оформить заказ из корзины
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - address
+                - phone
+              properties:
+                userId:
+                  type: integer
+                  description: ID пользователя
+                address:
+                  type: string
+                  description: Адрес доставки
+                phone:
+                  type: string
+                  description: Телефон для связи
+                comment:
+                  type: string
+                  description: Комментарий к заказу
+      responses:
+        '201':
+          description: Заказ создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Корзина пуста
+        '404':
+          description: Пользователь не найден
+
+  /orders/{orderId}:
+    get:
+      tags:
+        - OrderController
+      summary: 2. Получить заказ с полным списком товаров
+      operationId: getOrderById
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Детали заказа со списком товаров
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Заказ не найден
+
+  /orders/user/{userId}:
+    get:
+      tags:
+        - OrderController
+      summary: 3. Получить все заказы пользователя со списком товаров
+      operationId: getUserOrders
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [CREATED, PAID, SHIPPED, DELIVERED, CANCELLED]
+          description: Фильтр по статусу
+      responses:
+        '200':
+          description: Список заказов пользователя (каждый с товарами)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  size:
+                    type: integer
+        '404':
+          description: Пользователь не найден
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        name:
+          type: string
+          example: "Часы G-SHOCK"
+        price:
+          type: integer
+          example: 89990
+        category:
+          type: string
+          example: "watches"
+        imageUrl:
+          type: string
+          example: "https://goodsshop.ru/images/gshock.jpg"
+        stock:
+          type: integer
+          example: 25
+          description: Остаток на складе
+
+    BasketItem:
+      type: object
+      properties:
+        productId:
+          type: integer
+          example: 101
+        productName:
+          type: string
+          example: "Часы G-SHOCK"
+        price:
+          type: integer
+          example: 89990
+        quantity:
+          type: integer
+          example: 2
+        totalPrice:
+          type: integer
+          example: 179980
+
+    Basket:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Владелец корзины
+          example: 42
+        items:
+          type: array
+          description: Список товаров в корзине
+          items:
+            $ref: '#/components/schemas/BasketItem'
+        totalItems:
+          type: integer
+          description: Общее количество товаров
+          example: 2
+        totalPrice:
+          type: integer
+          description: Общая сумма
+          example: 179980
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      properties:
+        productId:
+          type: integer
+          example: 101
+        productName:
+          type: string
+          example: "Часы G-SHOCK"
+        price:
+          type: integer
+          example: 89990
+        quantity:
+          type: integer
+          example: 2
+        totalPrice:
+          type: integer
+          example: 179980
+
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          example: 5001
+        userId:
+          type: integer
+          description: Владелец заказа
+          example: 42
+        items:
+          type: array
+          description: Полный список товаров в заказе
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        totalItems:
+          type: integer
+          description: Общее количество товаров
+          example: 2
+        totalPrice:
+          type: integer
+          description: Общая сумма заказа
+          example: 179980
+        status:
+          type: string
+          enum:
+            - CREATED
+            - PAID
+            - SHIPPED
+            - DELIVERED
+            - CANCELLED
+          example: "CREATED"
+        deliveryAddress:
+          type: string
+          example: "г. Москва, ул. Тверская, д. 5"
+        contactPhone:
+          type: string
+          example: "+7 (999) 123-45-67"
+        comment:
+          type: string
+          example: "Позвонить за час"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
